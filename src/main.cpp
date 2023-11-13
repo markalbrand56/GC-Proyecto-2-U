@@ -34,7 +34,7 @@ int main() {
   SDL_Init(SDL_INIT_VIDEO);
   ImageLoader::init();
 
-  window = SDL_CreateWindow("DOOM", 0, 0, SCREEN_WIDTH * 2, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+  window = SDL_CreateWindow("DOOM", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
   ImageLoader::loadImage("+", "assets/wall3.png");

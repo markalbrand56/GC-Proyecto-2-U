@@ -114,7 +114,7 @@ public:
   }
 
   void render() {
-    for (int i = 1; i < SCREEN_WIDTH; i++) {
+    for (int i = 0; i < SCREEN_WIDTH; i++) {
       double a = player.a + player.fov / 2.0 - player.fov * i / SCREEN_WIDTH;
       Impact impact = cast_ray(a);
       float d = impact.d;
@@ -124,11 +124,10 @@ public:
         print("you lose");
         exit(1);
       }
-      int x = SCREEN_WIDTH + i;
+      int x = i;
       float h = static_cast<float>(SCREEN_HEIGHT)/static_cast<float>(d) * static_cast<float>(scale);
       draw_stake(x, h, impact);
     }
-
   }
 
   Player player{};
