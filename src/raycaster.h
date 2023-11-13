@@ -18,7 +18,7 @@ const Color W = {255, 255, 255};
 
 const int WIDTH = 16;
 const int HEIGHT = 11;
-const int BLOCK = 50;
+const int BLOCK = 75;
 const int SCREEN_WIDTH = WIDTH * BLOCK;
 const int SCREEN_HEIGHT = HEIGHT * BLOCK;
 
