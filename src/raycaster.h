@@ -65,19 +65,6 @@ public:
     SDL_RenderDrawPoint(renderer, x, y);
   }
 
-  void rect(int x, int y, const std::string& mapHit) {
-    for(int cx = x; cx < x + BLOCK; cx++) {
-      for(int cy = y; cy < y + BLOCK; cy++) {
-        int tx = ((cx - x) * tsize) / BLOCK;
-        int ty = ((cy - y) * tsize) / BLOCK;
-
-        Color c = ImageLoader::getPixelColor(mapHit, tx, ty);
-        SDL_SetRenderDrawColor(renderer, c.r, c.g, c.b , 255);
-        SDL_RenderDrawPoint(renderer, cx, cy);
-      }
-    }
-  }
-
   Impact cast_ray(float a) {
     float d = 0;
     std::string mapHit;
@@ -108,9 +95,6 @@ public:
 
         break;
       }
-     
-      point(x, y, W);
-      
       d += 1;
     }
     return Impact{d, mapHit, tx};
@@ -127,33 +111,9 @@ public:
 
       SDL_RenderDrawPoint(renderer, x, y);
     }
-  } 
- 
+  }
+
   void render() {
-    
-    // draw left side of the screen
-    
-    for (int x = 0; x < SCREEN_WIDTH; x += BLOCK) {
-      for (int y = 0; y < SCREEN_HEIGHT; y += BLOCK) {
-        int i = static_cast<int>(x / BLOCK);
-        int j = static_cast<int>(y / BLOCK);
-        
-        if (map[j][i] != ' ') {
-          std::string mapHit;
-          mapHit = map[j][i];
-          Color c = Color(255, 0, 0);
-          rect(x, y, mapHit);
-        }
-      }
-    }
-
-    for (int i = 1; i < SCREEN_WIDTH; i++) {
-      float a = player.a + player.fov / 2 - player.fov * i / SCREEN_WIDTH;
-      cast_ray(a);
-    }
-
-    // draw right side of the screen
-    
     for (int i = 1; i < SCREEN_WIDTH; i++) {
       double a = player.a + player.fov / 2.0 - player.fov * i / SCREEN_WIDTH;
       Impact impact = cast_ray(a);
@@ -171,7 +131,7 @@ public:
 
   }
 
-  Player player;
+  Player player{};
 private:
   int scale;
   SDL_Renderer* renderer;

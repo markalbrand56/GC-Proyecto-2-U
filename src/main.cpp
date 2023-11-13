@@ -43,11 +43,12 @@ int main() {
   ImageLoader::loadImage("*", "assets/wall4.png");
   ImageLoader::loadImage("g", "assets/wall5.png");
 
-  Raycaster r = { renderer };
-  r.load_map("assets/map.txt");
+  Raycaster raycaster = {renderer };
+  raycaster.load_map("assets/map.txt");
 
   bool running = true;
-  int speed = 10;
+  float speed = 10.0f;
+
   while(running) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -58,18 +59,18 @@ int main() {
       if (event.type == SDL_KEYDOWN) {
         switch(event.key.keysym.sym ){
           case SDLK_LEFT:
-            r.player.a += 3.14/24;
+              raycaster.player.a += 3.14 / 24;
             break;
           case SDLK_RIGHT:
-            r.player.a -= 3.14/24;
+              raycaster.player.a -= 3.14 / 24;
             break;
           case SDLK_UP:
-            r.player.x += speed * cos(r.player.a);
-            r.player.y += speed * sin(r.player.a);
+              raycaster.player.x += speed * cos(raycaster.player.a);
+                raycaster.player.y += speed * sin(raycaster.player.a);
             break;
           case SDLK_DOWN:
-            r.player.x -= speed * cos(r.player.a);
-            r.player.y -= speed * sin(r.player.a);
+              raycaster.player.x -= speed * cos(raycaster.player.a);
+                raycaster.player.y -= speed * sin(raycaster.player.a);
             break;
            default:
             break;
@@ -80,7 +81,7 @@ int main() {
     clear();
     draw_floor();
 
-    r.render();
+    raycaster.render();
 
     // render
 
