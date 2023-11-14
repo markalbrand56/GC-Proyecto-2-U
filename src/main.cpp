@@ -2,7 +2,8 @@
 #include <SDL_events.h>
 #include <SDL_render.h>
 #include <SDL_video.h>
-#include <print.h>
+#include <SDL_mixer.h>
+#include <iostream>
 
 #include "color.h"
 #include "imageloader.h"
@@ -11,6 +12,7 @@
 SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Texture* welcomeTexture;
+Mix_Music* backgroundMusic;
 
 void clear() {
   SDL_SetRenderDrawColor(renderer, 56, 56, 56, 255);
@@ -18,7 +20,6 @@ void clear() {
 }
 
 void draw_floor() {
-  // floor color
   SDL_SetRenderDrawColor(renderer, 112, 122, 122, 255);
   SDL_Rect rect = {
     SCREEN_WIDTH, 
@@ -31,6 +32,10 @@ void draw_floor() {
 
 SDL_Texture* loadTexture(const char* imagePath) {
   SDL_Surface* surface = SDL_LoadBMP(imagePath);
+  if (!surface) {
+    std::cerr << "Error al cargar la textura desde " << imagePath << ": " << SDL_GetError() << std::endl;
+    return nullptr;
+  }
   SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
   SDL_FreeSurface(surface);
   return texture;
@@ -38,11 +43,8 @@ SDL_Texture* loadTexture(const char* imagePath) {
 
 void renderWelcomeScreen() {
   clear();
-
-  // Render welcome image
   SDL_Rect welcomeRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
   SDL_RenderCopy(renderer, welcomeTexture, NULL, &welcomeRect);
-
   SDL_RenderPresent(renderer);
 }
 
@@ -75,16 +77,54 @@ void load_map(int id){
   }
 }
 
+void cleanup() {
+  Mix_FreeMusic(backgroundMusic);
+  Mix_CloseAudio();
+  SDL_DestroyTexture(welcomeTexture);
+  SDL_DestroyRenderer(renderer);
+  SDL_DestroyWindow(window);
+  SDL_Quit();
+}
+
 int main() {
   print("Starting game");
 
-  SDL_Init(SDL_INIT_VIDEO);
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
+    std::cerr << "Error al inicializar SDL: " << SDL_GetError() << std::endl;
+    return 1;
+  }
+
   ImageLoader::init();
 
   window = SDL_CreateWindow("DOOM", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+  if (!window) {
+    std::cerr << "Error al crear la ventana: " << SDL_GetError() << std::endl;
+    cleanup();
+    return 1;
+  }
 
-  // Default map
+  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+  if (!renderer) {
+    std::cerr << "Error al crear el renderizador: " << SDL_GetError() << std::endl;
+    cleanup();
+    return 1;
+  }
+
+  if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+    std::cerr << "Error al inicializar SDL_mixer: " << Mix_GetError() << std::endl;
+    cleanup();
+    return 1;
+  }
+
+  backgroundMusic = Mix_LoadMUS("assets/Density & Time - MAZE.mp3");
+  if (!backgroundMusic) {
+    std::cerr << "Error al cargar la música: " << Mix_GetError() << std::endl;
+    cleanup();
+    return 1;
+  }
+
+  Mix_PlayMusic(backgroundMusic, -1);
+
   ImageLoader::loadImage("+", "assets/map1/wall3.png");
   ImageLoader::loadImage("-", "assets/map1/wall1.png");
   ImageLoader::loadImage("|", "assets/map1/wall2.png");
@@ -94,22 +134,23 @@ int main() {
   Raycaster raycaster = {renderer };
   raycaster.load_map("assets/map.txt");
 
-  // Load welcome image
   welcomeTexture = loadTexture("assets/welcome.bmp");
+  if (!welcomeTexture) {
+    cleanup();
+    return 1;
+  }
 
   bool gameStarted = false;
   float speed = 10.0f;
   int selectedMap = 1;
 
-  Uint32 frameStart, frameTime; // For calculating the frames per second
+  Uint32 frameStart, frameTime;
 
   while (!gameStarted) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT) {
-        SDL_DestroyWindow(window);
-        SDL_Quit();
-        return 0;
+        gameStarted = true;
       }
       if (event.type == SDL_KEYDOWN) {
         if (event.key.keysym.sym == SDLK_SPACE) {
@@ -129,14 +170,13 @@ int main() {
     renderWelcomeScreen();
   }
 
-  // Game loop
   bool running = true;
   while (running) {
     frameStart = SDL_GetTicks();
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT) {
-        running = false;
+        running = false;        
         break;
       }
       if (event.type == SDL_KEYDOWN) {
@@ -166,20 +206,14 @@ int main() {
 
     raycaster.render();
 
-    // render
-
     SDL_RenderPresent(renderer);
     
     frameTime = SDL_GetTicks() - frameStart;
-
-    // display fps in the title
     char title[32];
     sprintf(title, "DOOM | FPS: %d", (int)(1000.0f / frameTime));
     SDL_SetWindowTitle(window, title);
   }
 
-  SDL_DestroyTexture(welcomeTexture);
-  SDL_DestroyWindow(window);
-  SDL_Quit();
+  cleanup();
   return 0;
 }
