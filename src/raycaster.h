@@ -157,6 +157,10 @@ public:
     };
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // set color to red
     SDL_RenderFillRect(renderer, &rect);
+
+    // draw line showing where the player is looking at
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // set color to green
+    SDL_RenderDrawLine(renderer, rect.x + miniMapScale / 2, rect.y + miniMapScale / 2, rect.x + miniMapScale / 2 + cos(player.a) * miniMapScale, rect.y + miniMapScale / 2 + sin(player.a) * miniMapScale);
   }
 
   Player player{};
