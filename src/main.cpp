@@ -46,6 +46,35 @@ void renderWelcomeScreen() {
   SDL_RenderPresent(renderer);
 }
 
+void load_map(int id){
+  switch (id)
+  {
+  case 1: // Map 1
+    ImageLoader::loadImage("+", "assets/map1/wall3.png");
+    ImageLoader::loadImage("-", "assets/map1/wall1.png");
+    ImageLoader::loadImage("|", "assets/map1/wall2.png");
+    ImageLoader::loadImage("*", "assets/map1/wall4.png");
+    ImageLoader::loadImage("g", "assets/map1/wall5.png");
+    break;
+  
+  case 2: // Map 2
+    ImageLoader::loadImage("+", "assets/map2/wall1.png");
+    ImageLoader::loadImage("-", "assets/map2/wall2.png");
+    ImageLoader::loadImage("|", "assets/map2/wall5.png");
+    ImageLoader::loadImage("*", "assets/map2/wall4.png");
+    ImageLoader::loadImage("g", "assets/map2/wall3.png");
+    break;
+  
+  default: // Default map
+    ImageLoader::loadImage("+", "assets/map1/wall3.png");
+    ImageLoader::loadImage("-", "assets/map1/wall1.png");
+    ImageLoader::loadImage("|", "assets/map1/wall2.png");
+    ImageLoader::loadImage("*", "assets/map1/wall4.png");
+    ImageLoader::loadImage("g", "assets/map1/wall5.png");
+    break;
+  }
+}
+
 int main() {
   print("Starting game");
 
@@ -55,6 +84,7 @@ int main() {
   window = SDL_CreateWindow("DOOM", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
+  // Default map
   ImageLoader::loadImage("+", "assets/map1/wall3.png");
   ImageLoader::loadImage("-", "assets/map1/wall1.png");
   ImageLoader::loadImage("|", "assets/map1/wall2.png");
@@ -69,6 +99,7 @@ int main() {
 
   bool gameStarted = false;
   float speed = 10.0f;
+  int selectedMap = 1;
 
   while (!gameStarted) {
     SDL_Event event;
@@ -78,8 +109,18 @@ int main() {
         SDL_Quit();
         return 0;
       }
-      if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
-        gameStarted = true;
+      if (event.type == SDL_KEYDOWN) {
+        if (event.key.keysym.sym == SDLK_SPACE) {
+          gameStarted = true;
+        } else if (event.key.keysym.sym == SDLK_1) {
+          selectedMap = 1;
+          load_map(selectedMap);
+          std::cout << "Map 1 loaded" << std::endl;
+        } else if (event.key.keysym.sym == SDLK_2) {
+          selectedMap = 2;
+          load_map(selectedMap);
+          std::cout << "Map 2 loaded" << std::endl;
+        }
       }
     }
 
