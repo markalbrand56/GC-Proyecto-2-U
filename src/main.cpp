@@ -101,6 +101,8 @@ int main() {
   float speed = 10.0f;
   int selectedMap = 1;
 
+  Uint32 frameStart, frameTime; // For calculating the frames per second
+
   while (!gameStarted) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -130,6 +132,7 @@ int main() {
   // Game loop
   bool running = true;
   while (running) {
+    frameStart = SDL_GetTicks();
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT) {
@@ -166,6 +169,13 @@ int main() {
     // render
 
     SDL_RenderPresent(renderer);
+    
+    frameTime = SDL_GetTicks() - frameStart;
+
+    // display fps in the title
+    char title[32];
+    sprintf(title, "DOOM | FPS: %d", (int)(1000.0f / frameTime));
+    SDL_SetWindowTitle(window, title);
   }
 
   SDL_DestroyTexture(welcomeTexture);
