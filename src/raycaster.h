@@ -128,6 +128,35 @@ public:
       float h = static_cast<float>(SCREEN_HEIGHT)/static_cast<float>(d) * static_cast<float>(scale);
       draw_stake(x, h, impact);
     }
+
+    // draw 2d map
+    int miniMapScale = 15;
+    int miniMapX = 0;
+    int miniMapY = SCREEN_HEIGHT - HEIGHT * miniMapScale;
+
+    for (int j = 0; j < HEIGHT; j++) {
+      for (int i = 0; i < WIDTH; i++) {
+        if (map[j][i] != ' ') {
+          SDL_Rect rect = {
+            miniMapX + i * miniMapScale,
+            miniMapY + j * miniMapScale,
+            miniMapScale,
+            miniMapScale
+          };
+          SDL_RenderFillRect(renderer, &rect);
+        }
+      }
+    }
+
+    // draw player on map
+    SDL_Rect rect = {
+      miniMapX + player.x / BLOCK * miniMapScale,
+      miniMapY + player.y / BLOCK * miniMapScale,
+      miniMapScale,
+      miniMapScale
+    };
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // set color to red
+    SDL_RenderFillRect(renderer, &rect);
   }
 
   Player player{};
