@@ -47,7 +47,7 @@ void renderWelcomeScreen() {
 }
 
 int main() {
-  print("hello world");
+  print("Starting game");
 
   SDL_Init(SDL_INIT_VIDEO);
   ImageLoader::init();
@@ -55,11 +55,11 @@ int main() {
   window = SDL_CreateWindow("DOOM", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
 
-  ImageLoader::loadImage("+", "assets/wall3.png");
-  ImageLoader::loadImage("-", "assets/wall1.png");
-  ImageLoader::loadImage("|", "assets/wall2.png");
-  ImageLoader::loadImage("*", "assets/wall4.png");
-  ImageLoader::loadImage("g", "assets/wall5.png");
+  ImageLoader::loadImage("+", "assets/map1/wall3.png");
+  ImageLoader::loadImage("-", "assets/map1/wall1.png");
+  ImageLoader::loadImage("|", "assets/map1/wall2.png");
+  ImageLoader::loadImage("*", "assets/map1/wall4.png");
+  ImageLoader::loadImage("g", "assets/map1/wall5.png");
 
   Raycaster raycaster = {renderer };
   raycaster.load_map("assets/map.txt");
