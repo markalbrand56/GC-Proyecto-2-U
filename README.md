@@ -11,7 +11,7 @@
 - [x] (5 puntos) Por agregar una pantalla de bienvenida
 - [x] (10 puntos mas) si la pantalla permite seleccionar entre multiples niveles
 - [x] (5 puntos) Por agregar música de fondo.
-- [ ] (10 puntos) Por agregar efectos de sonido
+- [x] (10 puntos) Por agregar efectos de sonido
 - [ ] (10 puntos) Por agregar una pantalla de exito cuando se cumpla una condicion en el nivel
 - [ ] (20 puntos) Por agregar al menos 1 animación a alguna sprite en la pantalla
 - [ ] 10 puntos más por implementar rotación con el mouse (solo horizontal)

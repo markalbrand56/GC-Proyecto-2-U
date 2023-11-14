@@ -13,6 +13,7 @@ SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Texture* welcomeTexture;
 Mix_Music* backgroundMusic;
+Mix_Chunk* footstepSound;
 
 void clear() {
   SDL_SetRenderDrawColor(renderer, 56, 56, 56, 255);
@@ -79,6 +80,7 @@ void load_map(int id){
 
 void cleanup() {
   Mix_FreeMusic(backgroundMusic);
+  Mix_FreeChunk(footstepSound);
   Mix_CloseAudio();
   SDL_DestroyTexture(welcomeTexture);
   SDL_DestroyRenderer(renderer);
@@ -119,6 +121,13 @@ int main() {
   backgroundMusic = Mix_LoadMUS("assets/Density & Time - MAZE.mp3");
   if (!backgroundMusic) {
     std::cerr << "Error al cargar la música: " << Mix_GetError() << std::endl;
+    cleanup();
+    return 1;
+  }
+
+  footstepSound = Mix_LoadWAV("assets/sounds/walking.wav");
+  if (!footstepSound) {
+    std::cerr << "Error al cargar el efecto de sonido: " << Mix_GetError() << std::endl;
     cleanup();
     return 1;
   }
@@ -170,6 +179,9 @@ int main() {
     renderWelcomeScreen();
   }
 
+  bool walkingForward = false;
+  bool walkingBackward = false;
+
   bool running = true;
   while (running) {
     frameStart = SDL_GetTicks();
@@ -190,10 +202,37 @@ int main() {
           case SDLK_UP:
             raycaster.player.x += speed * cos(raycaster.player.a);
             raycaster.player.y += speed * sin(raycaster.player.a);
+
+            if(!walkingForward) {
+              Mix_PlayChannel(-1, footstepSound, -1);  // Reproduce el sonido en bucle
+            }
+
+            walkingForward = true;
             break;
           case SDLK_DOWN:
             raycaster.player.x -= speed * cos(raycaster.player.a);
             raycaster.player.y -= speed * sin(raycaster.player.a);
+
+            if(!walkingBackward) {
+              Mix_PlayChannel(-1, footstepSound, -1);  // Reproduce el sonido en bucle
+            }
+
+            walkingBackward = true;
+            break;
+          default:
+            break;
+        }
+      }
+
+      if (event.type == SDL_KEYUP) {
+        switch (event.key.keysym.sym) {
+          case SDLK_UP:
+            walkingForward = false;
+            Mix_HaltChannel(-1);  // Detiene todos los canales
+            break;
+          case SDLK_DOWN:
+            walkingBackward = false;
+            Mix_HaltChannel(-1);  // Detiene todos los canales
             break;
           default:
             break;
