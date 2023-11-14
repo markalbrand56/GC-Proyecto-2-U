@@ -10,6 +10,7 @@
 
 SDL_Window* window;
 SDL_Renderer* renderer;
+SDL_Texture* welcomeTexture;
 
 void clear() {
   SDL_SetRenderDrawColor(renderer, 56, 56, 56, 255);
@@ -26,6 +27,23 @@ void draw_floor() {
     SCREEN_HEIGHT / 2
   };
   SDL_RenderFillRect(renderer, &rect);
+}
+
+SDL_Texture* loadTexture(const char* imagePath) {
+  SDL_Surface* surface = SDL_LoadBMP(imagePath);
+  SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+  SDL_FreeSurface(surface);
+  return texture;
+}
+
+void renderWelcomeScreen() {
+  clear();
+
+  // Render welcome image
+  SDL_Rect welcomeRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+  SDL_RenderCopy(renderer, welcomeTexture, NULL, &welcomeRect);
+
+  SDL_RenderPresent(renderer);
 }
 
 int main() {
@@ -46,10 +64,31 @@ int main() {
   Raycaster raycaster = {renderer };
   raycaster.load_map("assets/map.txt");
 
-  bool running = true;
+  // Load welcome image
+  welcomeTexture = loadTexture("assets/welcome.bmp");
+
+  bool gameStarted = false;
   float speed = 10.0f;
 
-  while(running) {
+  while (!gameStarted) {
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+      if (event.type == SDL_QUIT) {
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        return 0;
+      }
+      if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_SPACE) {
+        gameStarted = true;
+      }
+    }
+
+    renderWelcomeScreen();
+  }
+
+  // Game loop
+  bool running = true;
+  while (running) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT) {
@@ -57,22 +96,22 @@ int main() {
         break;
       }
       if (event.type == SDL_KEYDOWN) {
-        switch(event.key.keysym.sym ){
+        switch (event.key.keysym.sym) {
           case SDLK_LEFT:
-              raycaster.player.a += 3.14 / 24;
+            raycaster.player.a += 3.14 / 24;
             break;
           case SDLK_RIGHT:
-              raycaster.player.a -= 3.14 / 24;
+            raycaster.player.a -= 3.14 / 24;
             break;
           case SDLK_UP:
-              raycaster.player.x += speed * cos(raycaster.player.a);
-                raycaster.player.y += speed * sin(raycaster.player.a);
+            raycaster.player.x += speed * cos(raycaster.player.a);
+            raycaster.player.y += speed * sin(raycaster.player.a);
             break;
           case SDLK_DOWN:
-              raycaster.player.x -= speed * cos(raycaster.player.a);
-                raycaster.player.y -= speed * sin(raycaster.player.a);
+            raycaster.player.x -= speed * cos(raycaster.player.a);
+            raycaster.player.y -= speed * sin(raycaster.player.a);
             break;
-           default:
+          default:
             break;
         }
       }
@@ -88,6 +127,8 @@ int main() {
     SDL_RenderPresent(renderer);
   }
 
+  SDL_DestroyTexture(welcomeTexture);
   SDL_DestroyWindow(window);
   SDL_Quit();
+  return 0;
 }
