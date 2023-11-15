@@ -194,7 +194,6 @@ int main() {
       }
 
       if (event.type == SDL_MOUSEMOTION && mouseActive) {
-        std::cout << "Mouse moved: " << event.motion.xrel << ", " << event.motion.yrel << std::endl;
         raycaster.player.a += event.motion.xrel * 0.005;
       }
 
