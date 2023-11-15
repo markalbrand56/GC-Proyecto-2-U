@@ -181,6 +181,7 @@ int main() {
 
   bool walkingForward = false;
   bool walkingBackward = false;
+  bool mouseActive = false;
 
   bool running = true;
   while (running) {
@@ -191,8 +192,20 @@ int main() {
         running = false;        
         break;
       }
+
+      if (event.type == SDL_MOUSEMOTION && mouseActive) {
+        std::cout << "Mouse moved: " << event.motion.xrel << ", " << event.motion.yrel << std::endl;
+        raycaster.player.a += event.motion.xrel * 0.005;
+      }
+
       if (event.type == SDL_KEYDOWN) {
         switch (event.key.keysym.sym) {
+          case SDLK_ESCAPE:
+            running = false;
+            break;
+          case SDLK_m:
+            mouseActive = !mouseActive;
+            break;
           case SDLK_LEFT:
             raycaster.player.a += 3.14 / 24;
             break;
@@ -223,6 +236,7 @@ int main() {
             break;
         }
       }
+      
 
       if (event.type == SDL_KEYUP) {
         switch (event.key.keysym.sym) {
