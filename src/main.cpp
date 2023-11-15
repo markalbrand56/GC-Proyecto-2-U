@@ -53,27 +53,27 @@ void load_map(int id){
   switch (id)
   {
   case 1: // Map 1
-    ImageLoader::loadImage("+", "assets/map1/wall3.png");
-    ImageLoader::loadImage("-", "assets/map1/wall1.png");
-    ImageLoader::loadImage("|", "assets/map1/wall2.png");
-    ImageLoader::loadImage("*", "assets/map1/wall4.png");
-    ImageLoader::loadImage("g", "assets/map1/wall5.png");
+    ImageLoader::loadImage("+", "assets/doom/mwall1_2.png");
+    ImageLoader::loadImage("-", "assets/doom/mwall1_1.png");
+    ImageLoader::loadImage("|", "assets/doom/mwall2_1.png");
+    ImageLoader::loadImage("*", "assets/doom/mwall5_1.png");
+    ImageLoader::loadImage("g", "assets/doom/mwall4_1.png");
     break;
   
   case 2: // Map 2
-    ImageLoader::loadImage("+", "assets/map2/wall1.png");
-    ImageLoader::loadImage("-", "assets/map2/wall2.png");
-    ImageLoader::loadImage("|", "assets/map2/wall5.png");
-    ImageLoader::loadImage("*", "assets/map2/wall4.png");
-    ImageLoader::loadImage("g", "assets/map2/wall3.png");
+    ImageLoader::loadImage("+", "assets/hexen/w_049.png");
+    ImageLoader::loadImage("-", "assets/hexen/w_045.png");
+    ImageLoader::loadImage("|", "assets/hexen/w_042.png");
+    ImageLoader::loadImage("*", "assets/hexen/w_050.png");
+    ImageLoader::loadImage("g", "assets/hexen/w_053.png");
     break;
   
   default: // Default map
-    ImageLoader::loadImage("+", "assets/map1/wall3.png");
-    ImageLoader::loadImage("-", "assets/map1/wall1.png");
-    ImageLoader::loadImage("|", "assets/map1/wall2.png");
-    ImageLoader::loadImage("*", "assets/map1/wall4.png");
-    ImageLoader::loadImage("g", "assets/map1/wall5.png");
+    ImageLoader::loadImage("+", "assets/doom/mwall1_2.png");
+    ImageLoader::loadImage("-", "assets/doom/mwall1_1.png");
+    ImageLoader::loadImage("|", "assets/doom/mwall2_1.png");
+    ImageLoader::loadImage("*", "assets/doom/mwall5_1.png");
+    ImageLoader::loadImage("g", "assets/doom/mwall4_1.png");
     break;
   }
 }
@@ -134,11 +134,11 @@ int main() {
 
   Mix_PlayMusic(backgroundMusic, -1);
 
-  ImageLoader::loadImage("+", "assets/map1/wall3.png");
-  ImageLoader::loadImage("-", "assets/map1/wall1.png");
-  ImageLoader::loadImage("|", "assets/map1/wall2.png");
-  ImageLoader::loadImage("*", "assets/map1/wall4.png");
-  ImageLoader::loadImage("g", "assets/map1/wall5.png");
+  ImageLoader::loadImage("+", "assets/doom/mwall1_2.png");
+  ImageLoader::loadImage("-", "assets/doom/mwall1_1.png");
+  ImageLoader::loadImage("|", "assets/doom/mwall2_1.png");
+  ImageLoader::loadImage("*", "assets/doom/mwall5_1.png");
+  ImageLoader::loadImage("g", "assets/doom/mwall4_1.png");
 
   Raycaster raycaster = {renderer };
   raycaster.load_map("assets/map.txt");
