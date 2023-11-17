@@ -18,6 +18,11 @@ Mix_Chunk* footstepSound;
 void clear() {
   SDL_SetRenderDrawColor(renderer, 56, 56, 56, 255);
   SDL_RenderClear(renderer);
+
+  // draw the top half of the screen in another color
+  SDL_SetRenderDrawColor(renderer, 12, 12, 12, 255);
+  SDL_Rect rect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT / 2};
+  SDL_RenderFillRect(renderer, &rect);
 }
 
 void draw_floor() {
