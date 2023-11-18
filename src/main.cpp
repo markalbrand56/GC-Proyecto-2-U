@@ -111,7 +111,7 @@ int main() {
 
   ImageLoader::init();
 
-  window = SDL_CreateWindow("DOOM", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+  window = SDL_CreateWindow("Proyecto 3", 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
   if (!window) {
     std::cerr << "Error al crear la ventana: " << SDL_GetError() << std::endl;
     cleanup();
@@ -234,6 +234,7 @@ int main() {
             break;
           case SDLK_m:
             mouseActive = !mouseActive;
+            std::cout << "Mouse active: " << mouseActive << std::endl;
             break;
           case SDLK_LEFT:
             raycaster.player.a += 3.14 / 24;
@@ -292,7 +293,7 @@ int main() {
     
     frameTime = SDL_GetTicks() - frameStart;
     char title[32];
-    sprintf(title, "DOOM | FPS: %d", (int)(1000.0f / frameTime));
+    sprintf(title, "Proyecto 3 | FPS: %d", (int)(1000.0f / frameTime));
     SDL_SetWindowTitle(window, title);
   }
 
