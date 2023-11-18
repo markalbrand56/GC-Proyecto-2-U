@@ -123,7 +123,7 @@ int main() {
     return 1;
   }
 
-  backgroundMusic = Mix_LoadMUS("assets/Density & Time - MAZE.mp3");
+  backgroundMusic = Mix_LoadMUS("assets/Density & Time - MAZE (2).mp3");
   if (!backgroundMusic) {
     std::cerr << "Error al cargar la música: " << Mix_GetError() << std::endl;
     cleanup();
