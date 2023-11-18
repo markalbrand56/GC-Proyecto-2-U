@@ -113,16 +113,16 @@ public:
     }
   }
 
-  void render() {
+  bool render() {
     for (int i = 0; i < SCREEN_WIDTH; i++) {
       double a = player.a + player.fov / 2.0 - player.fov * i / SCREEN_WIDTH;
       Impact impact = cast_ray(a);
       float d = impact.d;
       Color c = Color(255, 0, 0);
 
-      if (d == 0) {
+      if (d < 1.0f) {
         print("you lose");
-        exit(1);
+        return true;
       }
       int x = i;
       float h = static_cast<float>(SCREEN_HEIGHT)/static_cast<float>(d) * static_cast<float>(scale);
@@ -161,6 +161,8 @@ public:
     // draw line showing where the player is looking at
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // set color to green
     SDL_RenderDrawLine(renderer, rect.x + miniMapScale / 2, rect.y + miniMapScale / 2, rect.x + miniMapScale / 2 + cos(player.a) * miniMapScale, rect.y + miniMapScale / 2 + sin(player.a) * miniMapScale);
+
+    return false;
   }
 
   Player player{};

@@ -12,6 +12,7 @@
 SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Texture* welcomeTexture;
+SDL_Texture* loseTexture;
 Mix_Music* backgroundMusic;
 Mix_Chunk* footstepSound;
 
@@ -51,6 +52,13 @@ void renderWelcomeScreen() {
   clear();
   SDL_Rect welcomeRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
   SDL_RenderCopy(renderer, welcomeTexture, NULL, &welcomeRect);
+  SDL_RenderPresent(renderer);
+}
+
+void renderLoseScreen() {
+  clear();
+  SDL_Rect loseRect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
+  SDL_RenderCopy(renderer, loseTexture, NULL, &loseRect);
   SDL_RenderPresent(renderer);
 }
 
@@ -153,6 +161,11 @@ int main() {
     cleanup();
     return 1;
   }
+  loseTexture = loadTexture("assets/lose.bmp");
+  if (!loseTexture) {
+    cleanup();
+    return 1;
+  }
 
   bool gameStarted = false;
   float speed = 10.0f;
@@ -164,7 +177,8 @@ int main() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT) {
-        gameStarted = true;
+        cleanup();
+        return 0;
       }
       if (event.type == SDL_KEYDOWN) {
         if (event.key.keysym.sym == SDLK_SPACE) {
@@ -172,18 +186,17 @@ int main() {
         } else if (event.key.keysym.sym == SDLK_1) {
           selectedMap = 1;
           load_map(selectedMap);
-          std::cout << "Map 1 loaded" << std::endl;
+          std::cout << "Doom loaded" << std::endl;
         } else if (event.key.keysym.sym == SDLK_2) {
           selectedMap = 2;
           load_map(selectedMap);
-          std::cout << "Map 2 loaded" << std::endl;
+          std::cout << "Hexen loaded" << std::endl;
         } else if (event.key.keysym.sym == SDLK_ESCAPE){
           cleanup();
           return 0;
         }
       }
     }
-
     renderWelcomeScreen();
   }
 
@@ -192,7 +205,16 @@ int main() {
   bool mouseActive = false;
 
   bool running = true;
+  bool loose = false;
   while (running) {
+
+    if (loose) {
+      renderLoseScreen();
+      SDL_Delay(2000);
+      gameStarted = false;
+      main();
+    }
+
     frameStart = SDL_GetTicks();
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -264,7 +286,7 @@ int main() {
     clear();
     draw_floor();
 
-    raycaster.render();
+    loose = raycaster.render();
 
     SDL_RenderPresent(renderer);
     
