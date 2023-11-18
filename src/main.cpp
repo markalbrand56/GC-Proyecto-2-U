@@ -177,6 +177,9 @@ int main() {
           selectedMap = 2;
           load_map(selectedMap);
           std::cout << "Map 2 loaded" << std::endl;
+        } else if (event.key.keysym.sym == SDLK_ESCAPE){
+          cleanup();
+          return 0;
         }
       }
     }
@@ -205,7 +208,7 @@ int main() {
       if (event.type == SDL_KEYDOWN) {
         switch (event.key.keysym.sym) {
           case SDLK_ESCAPE:
-            running = false;
+            main();
             break;
           case SDLK_m:
             mouseActive = !mouseActive;
