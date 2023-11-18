@@ -17,3 +17,15 @@
   - *Presionar 'M' para activar/desactivar el movimiento del mouse*
 - [ ] (10 puntos) Por agregar una pantalla de exito cuando se cumpla una condicion en el nivel
 - [ ] (20 puntos) Por agregar al menos 1 animación a alguna sprite en la pantalla
+
+## Controles
+- **Flecha arriba**: Mover hacia adelante
+- **Flecha abajo**: Mover hacia atrás
+- **Flecha izquierda**: Rotar cámara hacia la izquierda
+- **Flecha derecha**: Rotar cámara hacia la derecha
+- **ESC**: Regresar al menú principal / Salir del juego
+- **M**: Activar/desactivar movimiento del mouse
+
+## Video demostrativo
+
+[![Mira el video](https://img.youtube.com/vi/16nWLtVijtU/maxresdefault.jpg)](https://youtu.be/16nWLtVijtU)
